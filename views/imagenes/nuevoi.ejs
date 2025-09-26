@@ -1,15 +1,5 @@
 <div class="container py-4">
   <h2 class="mb-4 text-center">Administrar Imágenes de Productos</h2>
-
-  <!-- Mensajes -->
-  <% if (mensaje) { %>
-    <div class="alert alert-success"><%= mensaje %></div>
-  <% } %>
-
-  <% if (error) { %>
-    <div class="alert alert-danger"><%= error %></div>
-  <% } %>
-
   <form id="formImagen" action="/imagenes" method="POST" enctype="multipart/form-data">
     <div class="mb-3">
       <label for="categoria_id" class="form-label">Categoría</label>
