@@ -45,20 +45,6 @@
   </nav>
 
   <div class="container mt-4">
-    <% if (mensaje) { %>
-      <div class="alert alert-purple alert-dismissible fade show" role="alert" style="background-color: #9f7aea; color: white;">
-        <i class="bi bi-info-circle"></i> <%= mensaje %>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
-      </div>
-    <% } %>
-
-    <% if (error) { %>
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="bi bi-exclamation-triangle"></i> <%= error %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </div>
-    <% } %>
-
     <%- body %>
   </div>
 
