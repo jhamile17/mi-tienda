@@ -11,15 +11,22 @@
     <h1 class="mb-4"><%= title %></h1>
 
     <!-- Filtro por categoría -->
-    <form method="GET" action="/catalogo" class="mb-4">
-      <select name="categoria" class="form-select" onchange="this.form.submit()">
-        <option value="">Todas las categorías</option>
-        <% categorias.forEach(c => { %>
-          <option value="<%= c.id %>" <%= c.id == categoriaId ? "selected" : "" %>><%= c.nombre %></option>
-        <% }) %>
-      </select>
-    </form>
+    <div class="row mb-5"><!-- margen extra -->
+      <div class="col-md-6">
+        <form method="GET" action="/catalogo">
+          <select name="categoria" class="form-select" onchange="this.form.submit()">
+            <option value="">Todas las categorías</option>
+            <% categorias.forEach(c => { %>
+              <option value="<%= c.id %>" <%= c.id == categoriaId ? "selected" : "" %>>
+                <%= c.nombre %>
+              </option>
+            <% }) %>
+          </select>
+        </form>
+      </div>
+    </div>
 
+    <!-- Grilla de productos -->
     <div class="row">
       <% if (productos.length > 0) { %>
         <% productos.forEach(p => { %>
