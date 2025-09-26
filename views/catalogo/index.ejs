@@ -11,7 +11,7 @@
     <h1 class="mb-4"><%= title %></h1>
 
     <!-- Filtro por categoría -->
-    <div class="row mb-5"><!-- margen extra -->
+    <div class="row mb-5">
       <div class="col-md-6">
         <form method="GET" action="/catalogo">
           <select name="categoria" class="form-select" onchange="this.form.submit()">
@@ -41,7 +41,7 @@
                 <h5 class="card-title"><%= p.nombre %></h5>
                 <p class="card-text">Categoría: <%= p.categoria %></p>
                 <p class="card-text">Precio: S/ <%= p.precio %></p>
-                <a href="/catalogo/<%= p.id %>" class="btn btn-primary">Ver detalle</a>
+                <a href="/catalogo/producto/<%= p.id %>" class="btn btn-primary">Ver detalle</a>
               </div>
             </div>
           </div>
@@ -53,3 +53,4 @@
   </div>
 </body>
 </html>
+
