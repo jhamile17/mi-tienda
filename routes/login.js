@@ -94,7 +94,7 @@ router.post("/", async (req, res) => {
 });
 router.get("/logout", (req, res) => {
   res.clearCookie("token");
-  res.redirect("/catalogo?mensaje=Sesión cerrada correctamente");
+  res.redirect("/catalogo");
 });
 
 module.exports = router;
