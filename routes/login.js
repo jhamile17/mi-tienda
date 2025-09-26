@@ -92,11 +92,9 @@ router.post("/", async (req, res) => {
     });
   }
 });
-
-// Logout
 router.get("/logout", (req, res) => {
   res.clearCookie("token");
-  res.redirect("/login?mensaje=Sesión cerrada correctamente");
+  res.redirect("/catalogo?mensaje=Sesión cerrada correctamente");
 });
 
 module.exports = router;
