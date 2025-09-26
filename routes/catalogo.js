@@ -1,94 +1,56 @@
 const express = require("express");
-const pool = require("../db"); // tu conexión MySQL
+const pool = require("../db");
 const router = express.Router();
 
-// GET /catalogo → lista productos con filtro opcional por categoría
+// Catálogo
 router.get("/", async (req, res) => {
   try {
-    const categoriaId = req.query.categoria || "";
+    const categoriaId = req.query.categoria || null;
+    const mensaje = req.query.mensaje || null;
 
-    // Obtener todas las categorías
-    const [categorias] = await pool.query("SELECT id, nombre FROM categorias");
+    // Traer categorías
+    const [categorias] = await pool.query("SELECT * FROM categorias");
 
-    let productos = [];
+    // Traer productos
+    let query = `
+      SELECT p.id, p.nombre, p.precio, c.nombre AS categoria,
+             (SELECT i.url FROM imagenes_productos i WHERE i.producto_id = p.id ORDER BY i.id ASC LIMIT 1) AS imagen
+      FROM productos p
+      LEFT JOIN categorias c ON p.categoria_id = c.id
+    `;
+    const params = [];
     if (categoriaId) {
-      // Productos filtrados por categoría
-      [productos] = await pool.query(
-        `SELECT p.id, p.nombre, p.precio, c.nombre AS categoria,
-                ip.url AS imagen
-         FROM productos p
-         LEFT JOIN categorias c ON p.categoria_id = c.id
-         LEFT JOIN imagenes_productos ip ON ip.producto_id = p.id
-         WHERE c.id = ?`,
-        [categoriaId]
-      );
-    } else {
-      // Todos los productos
-      [productos] = await pool.query(
-        `SELECT p.id, p.nombre, p.precio, c.nombre AS categoria,
-                ip.url AS imagen
-         FROM productos p
-         LEFT JOIN categorias c ON p.categoria_id = c.id
-         LEFT JOIN imagenes_productos ip ON ip.producto_id = p.id`
-      );
+      query += " WHERE p.categoria_id = ?";
+      params.push(categoriaId);
     }
+    query += " ORDER BY p.nombre ASC";
 
-    res.render("catalogo/index", {
-      layout: "layout",
+    const [productos] = await pool.query(query, params);
+
+    res.render("catalogo", {
       title: "Catálogo de Productos",
       categorias,
       productos,
-      categoriaId
+      categoriaId,
+      mensaje,   // 👈 lo recibe el layout
+      error: null,
+      isAuthenticated: !!req.user,
+      user: req.user || null
     });
   } catch (err) {
     console.error(err);
-    res.status(500).render("error", {
-      title: "Error al cargar catálogo",
-      mensaje: "Ha ocurrido un error al cargar el catálogo."
-    });
-  }
-});
-
-// GET /catalogo/:id → detalle de un producto con imágenes
-router.get("/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    // Obtener producto
-    const [[producto]] = await pool.query(
-      `SELECT p.id, p.nombre, p.precio, c.nombre AS categoria
-       FROM productos p
-       LEFT JOIN categorias c ON p.categoria_id = c.id
-       WHERE p.id = ?`,
-      [id]
-    );
-
-    if (!producto) {
-      return res.status(404).render("error", {
-        title: "Producto no encontrado",
-        mensaje: "El producto que buscas no existe."
-      });
-    }
-
-    // Obtener imágenes del producto
-    const [imagenes] = await pool.query(
-      `SELECT * FROM imagenes_productos WHERE producto_id = ?`,
-      [id]
-    );
-
-    res.render("catalogo/detalle", {
-      layout: "layout",
-      title: producto.nombre,
-      producto,
-      imagenes  // <-- PASAMOS las imágenes a la vista
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).render("error", {
-      title: "Error al cargar producto",
-      mensaje: "Ha ocurrido un error al cargar el producto."
+    res.render("catalogo", {
+      title: "Catálogo de Productos",
+      categorias: [],
+      productos: [],
+      categoriaId: null,
+      mensaje: null,
+      error: "Error al cargar catálogo",
+      isAuthenticated: !!req.user,
+      user: req.user || null
     });
   }
 });
 
 module.exports = router;
+
