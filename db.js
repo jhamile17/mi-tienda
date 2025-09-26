@@ -1,12 +1,13 @@
-// db.js
-const mysql = require('mysql2');
-// Crear pool de conexiones para manejar múltiples requests
+const mysql = require('mysql2/promise');
 const pool = mysql.createPool({
-host: 'localhost',
-user: 'root', // tu usuario de MySQL
-password: '', // tu contraseña de MySQL
-database: 'tienda'
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  multipleStatements: true
 });
-// Promisify para usar async/await
-const promisePool = pool.promise();
-module.exports = promisePool;
+module.exports = pool;
