@@ -2,6 +2,7 @@ const express = require("express");
 const pool = require("../db");
 const router = express.Router();
 
+// 📌 Catálogo de productos
 router.get("/", async (req, res) => {
   try {
     const categoriaId = req.query.categoria || null;
@@ -83,3 +84,4 @@ router.get("/producto/:id", async (req, res) => {
 });
 
 module.exports = router;
+
