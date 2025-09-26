@@ -36,6 +36,7 @@
               <th>Nombre</th>
               <th>Precio (S/)</th>
               <th>Categoría</th>
+              <th>Imagen</th> <!-- Ahora va después de categoría -->
               <th>Acciones</th>
             </tr>
           </thead>
@@ -46,6 +47,13 @@
                 <td><%= producto.nombre %></td>
                 <td><%= Number(producto.precio).toFixed(2) %></td>
                 <td><%= producto.categoria || 'Sin categoría' %></td>
+                <td>
+                  <% if (producto.imagen) { %>
+                    <img src="/imagenes/<%= producto.imagen %>" alt="<%= producto.nombre %>" width="80">
+                  <% } else { %>
+                    <span>No hay imagen</span>
+                  <% } %>
+                </td>
                 <td>
                   <% if (isAuthenticated) { %>
                     <a href="/productos/<%= producto.id %>/edit" class="btn btn-sm btn-warning">Editar</a>
